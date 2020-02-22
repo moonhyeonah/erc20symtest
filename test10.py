@@ -7,7 +7,7 @@ from manticore.core.smtlib.solver import Z3Solver
 m = ManticoreEVM()
 solver = Z3Solver.instance()
 
-with open('test08.sol') as f:
+with open('test10.sol') as f:
     source_code = f.read()
 
 # Create one user account
@@ -28,11 +28,8 @@ m.constrain(symbolic_val > val)
 
 contract_account.transfer(to_account, symbolic_val, caller=user_account)
 
-contract_account.balanceOf(user_account)
-contract_account.balanceOf(to_account)
-
-
 for state in m.all_states:
     print("TEST10! see {}".format(m.workspace))
     m.generate_testcase(state, name="TEST10")
+
 

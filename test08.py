@@ -23,8 +23,8 @@ for state in m.ready_states:
     val = state.platform.transactions[-1].return_data
     val = ABI.deserialize("uint", val)
 
-symbolic_val = 15 #m.make_symbolic_value()
-m.constrain(symbolic_val > 0)
+symbolic_val = m.make_symbolic_value()
+m.constrain(symbolic_val > 30)
 m.constrain(symbolic_val <= val)
 
 contract_account.transfer(to_account, symbolic_val, caller=user_account)
