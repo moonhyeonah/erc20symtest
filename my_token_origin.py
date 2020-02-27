@@ -22,23 +22,19 @@ contract_account.balances(user_account)
 
 symbolic_val = m.make_symbolic_value()
 symbolic_to = m.make_symbolic_value()
-
 contract_account.balances(symbolic_to)
 # Transfer is called with symbolic values
 # Manticore will fork and create state at each condition executed
 contract_account.transfer(symbolic_to, symbolic_val)
 
-contract_account.balances(user_account)
 contract_account.balances(symbolic_to)
+contract_account.balances(user_account)
 
 # Check of properties ######
 
-#bug_found = False
+bug_found = False
 # Explore all the forks
 for state in m.ready_states:
-    print("my_token.py! see {}".format(m.workspace))
-    m.generate_testcase(state, 'MyToken')
-    """
 
     # state.plateform.transactions returns the list of transactions
     # state.plateform.transactions[0] is the contract creation
@@ -59,4 +55,4 @@ for state in m.ready_states:
         bug_found = True
 
 if not bug_found:
-    print('No bug were found')"""
+    print('No bug were found')
