@@ -52,48 +52,48 @@ contract StandardToken {
     function allowance(address _owner, address _spender) public constant returns (uint256 remaining) {
       return allowed[_owner][_spender];
     }
+    
+    function setBalance(address _owner, uint256 _value) public returns (bool success) {
+        balances[_owner] = _value;
+        return true;
+    }
 }
 
 contract ERC20Token {
-    function totalSupply() public pure returns (uint256) {}
+    function totalSupply() public view returns (uint256);
     function balanceOf(address _owner) public view returns (uint256 balance);
     function transfer(address _to, uint256 _value) public returns (bool success);
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
     function approve(address _spender, uint256 _value) public returns (bool success);
     function allowance(address _owner, address _spender) public view returns (uint256 remaining);
 
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Transfer(address indexed _from, address indexed _to, uint256 _value);
+    event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 }
 
 contract ERC20Test {
     
     ERC20Token targetToken;
-    uint256 constant MAX = 2 ** 256 - 1;
-    
+
     constructor (address _targetToken) public {
         targetToken = ERC20Token(_targetToken);
     }
     
-    function testBA1(address _owner, uint256 _balance) public view returns (bool success) {
+    function testBA(address _owner, uint256 _balance) public view returns (bool success) {
         if (targetToken.balanceOf(_owner) == _balance) {
             return true;
         }
         return false;
     }
     
-/*    function testBA2(address _owner, uint256 _balance) public view returns (bool success) {
-        return false;
-    }
-*/    
-    function testTS1(uint256 _totalSupply) public view returns (bool success) {
+    function testTS(uint256 _totalSupply) public view returns (bool success) {
         if (targetToken.totalSupply() == _totalSupply) {
             return true;
         }
         return false;
     }
 
-    function testAL1(address _owner, address _spender, uint256 _remaining) public view returns (bool success) {
+    function testAL(address _owner, address _spender, uint256 _remaining) public view returns (bool success) {
         if (targetToken.allowance(_owner, _spender) == _remaining) {
             return true;
         }
@@ -128,7 +128,7 @@ contract ERC20Test {
         uint256 remaining = targetToken.allowance(_from, msgSender);
         
         if (fromBal >= _value) {
-            if ((toBal + _value) <= MAX) {
+            if ((toBal + _value) >= toBal) {
                 if (remaining >= _value) {
                     if (targetToken.transferFrom(_from, _to, _value) == true) {
                         if ( (targetToken.balanceOf(_from) == (fromBal - _value)) &&
@@ -169,7 +169,7 @@ contract ERC20Test {
         uint256 fromBal = targetToken.balanceOf(msgSender);
         uint256 toBal = targetToken.balanceOf(_to);
         if (fromBal >= _value) {
-            if ((toBal + _value) <= MAX) {
+            if ((toBal + _value) >= toBal) {
                 if (targetToken.transfer(_to, _value) == true) {
                     if ( (targetToken.balanceOf(msgSender) == (fromBal - _value)) &&
                          (targetToken.balanceOf(_to) == (toBal + _value)) )
